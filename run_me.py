@@ -20,7 +20,7 @@ client   : TelegramClient = TelegramClient('anon',
 
 media_types = {
     "audio/ogg"  : "голосовое сообщение",
-    "audio/mpeg" : "аудиофайл",
+    "audio/mpeg" : "аудио",
     "video/mp4"  : "видео",
 }
 
@@ -42,7 +42,7 @@ def get_file_name(media: Union[MessageMediaPhoto, MessageMediaDocument,],
         return "photo.jpg"
     elif media_type == "видео":
         return "video.mp4"
-    elif media_type == "аудиофайл":
+    elif media_type == "аудио":
         return "music.mp3"
     elif media_type == "голосовое сообщение":
         return "voice.ogg"
@@ -66,12 +66,12 @@ async def save_protected_media(message: NewMessage.Event) -> None:
     if not media or isinstance(media, MessageMediaWebPage):
         return
 
-    media_type : str                  = get_media_type(media)
-    chat       : Union[Channel, User] = message.chat
-    ttl_seconds: int                  = media.ttl_seconds
-    protected  : bool                 = (chat.noforwards
-                                         if not isinstance(chat, User)
-                                         else False)
+    media_type  : str                  = get_media_type(media)
+    chat        : Union[Channel, User] = message.chat
+    ttl_seconds : int                  = media.ttl_seconds
+    protected   : bool                 = (chat.noforwards
+                                          if not isinstance(chat, User)
+                                          else False)
 
     if ttl_seconds:
         vanishing = ("сразу после просмотра" if ttl_seconds == 2147483647 else
